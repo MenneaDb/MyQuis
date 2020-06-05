@@ -1,6 +1,6 @@
 package com.whatevervalue.myquis.Model
 
-class Plant(genus: String, species: String, cultivar: String, common: String, picture_name: String, description: String, difficulty: Int, id: Int= 0) {
+class Plant(var genus: String,var species: String,var cultivar: String,var common: String,var picture_name: String,var description: String,var difficulty: Int,var id: Int= 0) {
 
     constructor() : this("", "", "", "", "", "", 0, 0)
 
