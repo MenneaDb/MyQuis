@@ -9,7 +9,7 @@ class ParsePlantUtility {
 
         val allPlantObjects: ArrayList<Plant> = ArrayList()
         val downloadingObject = DownloadingObject()
-        val topLevelPlantJSONData = downloadingObject.downloadJSONDataFromLink("http://plantplaces.com/perl/mobile/flashcard.pl")
+        val topLevelPlantJSONData = downloadingObject.downloadJSONDataFromLink("https://plantplaces.com/perl/mobile/flashcard.pl")
 
         val topLevelJSONObject = JSONObject(topLevelPlantJSONData)
         val plantObjectsArray: JSONArray = topLevelJSONObject.getJSONArray("values")
@@ -25,7 +25,7 @@ class ParsePlantUtility {
                 plantObject.species = getString("species")
                 plantObject.cultivar = getString("cultivar")
                 plantObject.common = getString("common")
-                plantObject.picture_name = getString("picture_name")
+                plantObject.pictureName = getString("picture_name")
                 plantObject.description = getString("description")
                 plantObject.difficulty = getInt("difficulty")
                 plantObject.id = getInt("id")
