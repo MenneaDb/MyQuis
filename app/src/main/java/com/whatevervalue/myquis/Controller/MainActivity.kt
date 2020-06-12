@@ -1,5 +1,6 @@
 package com.whatevervalue.myquis.Controller
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
@@ -38,11 +39,6 @@ class MainActivity : AppCompatActivity() {
     private var photoGalleryButton: Button? = null
     private var imageTaken: ImageView? = null
 
-    /*private var button1 : Button? = null
-     private var button2 : Button? = null
-     private var button3 : Button? = null
-     private var button4 : Button? = null*/
-
     val OPEN_CAMERA_BUTTON_REQUEST_ID = 1000
     val OPEN_PHOTO_GALLERY_BUTTON_ID = 2000
 
@@ -53,43 +49,21 @@ class MainActivity : AppCompatActivity() {
     var numberOfTimesUserAnswerWrong: Int = 0
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar) // is going to put the tool bar on top of the Layout. toolbar is the ID we gave it inside the Activity_Main
+        setSupportActionBar(toolbar)
 
         setProgressBar(false)
         displayUIWidgets(false)
         YoYo.with(Techniques.Pulse)
             .duration(700)
             .repeat(5)
-            .playOn(btnNextPlant);
+            .playOn(btnNextPlant)
 
-
-
-
-
-        /* Toast.makeText(this,"The OnCreate Method is called", Toast.LENGTH_SHORT).show()
-        val myPlant: Plant = Plant("", "", "","","","",0,0)
-
-       // Plant("Koelreuteria", "paniculata", "","Golden Rain Tree","Koelreuteria_paniculata_branch.JPG","Branch of Koelreuteria paniculata",3,24)
-        myPlant.plantName = "Wadas Memory Magnolia"
-         var nameOfPlant = myPlant.plantName */
-
-        /* var flower = Plant()
-        var tree = Plant()
-
-        var collectionOfPlants : ArrayList<Plant> = ArrayList()
-        collectionOfPlants.add(flower)
-        collectionOfPlants.add(tree)*/
 
         cameraButton = findViewById(R.id.btnOpenaCamera)
         photoGalleryButton = findViewById(R.id.btnPhotoGallery)
-        /*button1 = findViewById(R.id.button1)
-        button2 = findViewById(R.id.button2)
-        button3 = findViewById(R.id.button3)
-        button4 = findViewById(R.id.button4)*/
 
         imageTaken = findViewById<ImageView>(R.id.imgTaken)
 
@@ -105,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
             val galleryIntent = Intent(
                 Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
             )
             startActivityForResult(galleryIntent, OPEN_PHOTO_GALLERY_BUTTON_ID)
 
@@ -125,27 +99,27 @@ class MainActivity : AppCompatActivity() {
                 }
 
 
-                val gradientColors: IntArray = IntArray(2)
+                val gradientColors = IntArray(2)
                 gradientColors.set(0, Color.parseColor("#FFFFFFFF"))
                 gradientColors.set(1, Color.parseColor("#BBF3D6"))
-                var gradientDrawable: GradientDrawable = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, gradientColors)
-                var convertedDipValue = dipToFloat(this@MainActivity, 50f)
+                val gradientDrawable: GradientDrawable = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, gradientColors)
+                val convertedDipValue = dipToFloat(this@MainActivity, 50f)
                 gradientDrawable.setCornerRadius(convertedDipValue)
                 gradientDrawable.setSize(5, Color.parseColor("#FFFFFF"))
 
 
-                button1.setBackground(gradientDrawable)
-                button2.setBackground(gradientDrawable)
-                button3.setBackground(gradientDrawable)
-                button4.setBackground(gradientDrawable)
+                button1.background = gradientDrawable
+                button2.background = gradientDrawable
+                button3.background = gradientDrawable
+                button4.background = gradientDrawable
 
             }
         })
 
     }
 
-    fun dipToFloat(context: Context, dipValue: Float): Float {
-        val metrics: DisplayMetrics = context.getResources().getDisplayMetrics()
+    private fun dipToFloat(context: Context, dipValue: Float): Float {
+        val metrics: DisplayMetrics = context.resources.displayMetrics
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics)
     }
 
@@ -175,14 +149,6 @@ class MainActivity : AppCompatActivity() {
 
 
     fun button1IsClicked(buttonView: View) {
-        /*Toast.makeText(this, "The Button1 is clicked", Toast.LENGTH_SHORT).show()
-
-        var myNumber = 20
-        val myName: String = "Federico"
-        var numbersOfLetters = myName.length
-
-        var animalName: String? = null
-        var numberOfCharactersOfAnimalName = animalName?.length ?: 100 */
 
         specifyTheRightAndWrongAnswer(0)
 
@@ -190,52 +156,44 @@ class MainActivity : AppCompatActivity() {
 
     fun button2IsClicked(buttonView: View) {
 
-        //Toast.makeText(this, "The Button2 is clicked", Toast.LENGTH_SHORT).show()
+
     specifyTheRightAndWrongAnswer(1)
     }
 
     fun button3IsClicked(buttonView: View) {
-
-        //Toast.makeText(this, "The Button3 is clicked", Toast.LENGTH_SHORT).show()
 
     specifyTheRightAndWrongAnswer(2)
     }
 
     fun button4IsClicked(buttonView: View) {
 
-        //Toast.makeText(this, "The Button4 is clicked", Toast.LENGTH_SHORT).show()
     specifyTheRightAndWrongAnswer(3)
     }
 
-
+    @SuppressLint("StaticFieldLeak")
     inner class DownloadingPlantTask : AsyncTask<String, Int, List<Plant>>() {
 
         override fun doInBackground(vararg params: String?): List<Plant>? {
             //can access Background thread.
-
-            /*val downloadingObject = DownloadingObject()
-            var jsonData = downloadingObject.downloadJSONDataFromLink("http://plantplaces.com/perl/mobile/flashcard.pl")
-            Log.i("JSON", jsonData)*/
 
             val parsePlant = ParsePlantUtility()
 
             return parsePlant.parsePlantObjectFromJSONData()
         }
 
-
         override fun onPostExecute(result: List<Plant>?) {
             super.onPostExecute(result)
             //can access User Interface thread. No background thread
 
-            var numberOfPlants= result?.size ?: 0
+            val numberOfPlants= result?.size ?: 0
 
             if(numberOfPlants > 0) {
-                var randomPlantIndexForButton1: Int = (Math.random() * result!!.size).toInt()
-                var randomPlantIndexForButton2: Int = (Math.random() * result!!.size).toInt()
-                var randomPlantIndexForButton3: Int = (Math.random() * result!!.size).toInt()
-                var randomPlantIndexForButton4: Int = (Math.random() * result!!.size).toInt()
+                val randomPlantIndexForButton1: Int = (Math.random() * result!!.size).toInt()
+                val randomPlantIndexForButton2: Int = (Math.random() * result.size).toInt()
+                val randomPlantIndexForButton3: Int = (Math.random() * result.size).toInt()
+                val randomPlantIndexForButton4: Int = (Math.random() * result.size).toInt()
 
-                var allRandomPlants = ArrayList<Plant>()
+                val allRandomPlants = ArrayList<Plant>()
                 allRandomPlants.add(result.get(randomPlantIndexForButton1))
                 allRandomPlants.add(result.get(randomPlantIndexForButton2))
                 allRandomPlants.add(result.get(randomPlantIndexForButton3))
@@ -253,9 +211,6 @@ class MainActivity : AppCompatActivity() {
                 downloadingImageTask.execute(allRandomPlants.get(correctAnswerIndex).pictureName)
 
             }
-
-
-
         }
 
     }
@@ -263,64 +218,37 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        Toast.makeText(this, "The OnStart Method is called", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "The OnStart Method is called", Toast.LENGTH_SHORT).show()
     }
 
     override fun onResume() {
         super.onResume()
-        //Toast.makeText(this, "The OnResume Method is called", Toast.LENGTH_SHORT).show()
         checkForInternetConnection()
     }
 
     override fun onPause() {
         super.onPause()
-        Toast.makeText(this, "The OnPause Method is called", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "The OnPause Method is called", Toast.LENGTH_SHORT).show()
     }
 
     override fun onStop() {
         super.onStop()
-        Toast.makeText(this, "The OnStop Method is called", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "The OnStop Method is called", Toast.LENGTH_SHORT).show()
     }
 
     override fun onRestart() {
         super.onRestart()
-        Toast.makeText(this, "The OnRestart Method is called", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "The OnRestart Method is called", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Toast.makeText(this, "The OnDestroy Method is called", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "The OnDestroy Method is called", Toast.LENGTH_SHORT).show()
     }
 
     fun imageViewIsClicked(view: View) {
 
 
-/*        val randomNumber : Int = (Math.random() * 6).toInt() + 1
-        Log.i("TAG", "THE RANDOM BUTTON NUMBER IS: $randomNumber")
-
-        if(randomNumber == 1){
-
-            btnOpenaCamera.setBackgroundColor(Color.YELLOW)
-        }
-
-        else if ( randomNumber == 2){
-
-            btnPhotoGallery.setBackgroundColor(Color.MAGENTA)
-        }else if (randomNumber == 3){
-
-            button1.setBackgroundColor(Color.WHITE)
-
-        }else if (randomNumber == 4){
-
-            button2.setBackgroundColor(Color.GREEN)
-        }else if ( randomNumber == 5){
-
-            button3.setBackgroundColor(Color.RED)
-        }else if (randomNumber == 6){
-
-            button4.setBackgroundColor(Color.BLUE)
-        }
-*/
         val randomNumber: Int = (Math.random() * 6).toInt() + 1
         Log.i("TAG", "THE RANDOM BUTTON NUMBER IS: $randomNumber")
 
@@ -342,13 +270,13 @@ class MainActivity : AppCompatActivity() {
         val connectivityManager = this.getSystemService(android.content.Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo
         val isDeviceConnectedToInternet = networkInfo !=null && networkInfo.isConnectedOrConnecting
-        if(isDeviceConnectedToInternet){
+        return if(isDeviceConnectedToInternet){
 
-            return true
+            true
         }else{
 
             createAlert()
-            return false
+            false
         }
 
     }
@@ -375,6 +303,7 @@ class MainActivity : AppCompatActivity() {
 
     // SPECIFY RIGHT AND WRONG ANSWER
 
+    @SuppressLint("SetTextI18n")
     private fun specifyTheRightAndWrongAnswer(userGuess: Int)  {
 
         when (correctAnswerIndex) {
@@ -386,13 +315,13 @@ class MainActivity : AppCompatActivity() {
         }
         if (userGuess == correctAnswerIndex) {
 
-            txtState.setText("Right!")
+            txtState.text = "Right!"
             numberOfTimesUserAnswerCorrectly++
-            txtRightAnswer.setText("$numberOfTimesUserAnswerCorrectly")
+            txtRightAnswer.text = "$numberOfTimesUserAnswerCorrectly"
         }else {
 
-            var correctPlantName = correctPlant.toString()
-            txtState.setText("Wrong. Choose : $correctPlantName")
+            val correctPlantName = correctPlant.toString()
+            txtState.text = "Wrong. Choose : $correctPlantName"
             numberOfTimesUserAnswerWrong++
             txtWrongAnswer.setText("$numberOfTimesUserAnswerWrong")
         }
@@ -400,6 +329,7 @@ class MainActivity : AppCompatActivity() {
 
     // DOWNLOADING IMAGE PROCESS
 
+    @SuppressLint("StaticFieldLeak")
     inner class DownloadingImageTask: AsyncTask<String, Int, Bitmap?>() {
 
 
@@ -485,7 +415,7 @@ class MainActivity : AppCompatActivity() {
         YoYo.with(techniques)
             .duration(700)
             .repeat(0)
-            .playOn(view);
+            .playOn(view)
 
 
     }
